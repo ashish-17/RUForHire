@@ -35,4 +35,9 @@ public class JobSearchController {
 		JobSearchServiceResponse response = jobDescriptionService.searchJobs(query, location, start);
 		return response;
 	}
+	
+	@RequestMapping(method = RequestMethod.GET)
+	public String searchPage() {
+		return "jobsearch";
+	}
 }
