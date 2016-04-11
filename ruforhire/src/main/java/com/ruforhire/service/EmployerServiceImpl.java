@@ -8,19 +8,19 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ruforhire.dao.CompanyDao;
-import com.ruforhire.model.Company;
+import com.ruforhire.dao.EmployerDao;
+import com.ruforhire.model.Employer;
 
 /**
  * @author ashish
  *
  */
 @Service
-public class CompanyServiceImpl implements CompanyService {
-	private CompanyDao companyDao;
+public class EmployerServiceImpl implements EmployerService {
+	private EmployerDao employerDao;
 
-	public void setCompanyDao(CompanyDao companyDao) {
-		this.companyDao = companyDao;
+	public void setEmployerDao(EmployerDao employerDao) {
+		this.employerDao = employerDao;
 	}
 
 	/*
@@ -31,8 +31,8 @@ public class CompanyServiceImpl implements CompanyService {
 	 */
 	@Override
 	@Transactional
-	public void addCompany(Company c) {
-		companyDao.addCompany(c);
+	public void addEmployer(Employer c) {
+		employerDao.addEmployer(c);
 	}
 
 	/*
@@ -44,8 +44,8 @@ public class CompanyServiceImpl implements CompanyService {
 	 */
 	@Override
 	@Transactional
-	public void updateCompany(Company c) {
-		companyDao.updateCompany(c);
+	public void updateEmployer(Employer c) {
+		employerDao.updateEmployer(c);
 	}
 
 	/*
@@ -55,8 +55,8 @@ public class CompanyServiceImpl implements CompanyService {
 	 */
 	@Override
 	@Transactional
-	public List<Company> listCompanies() {
-		return companyDao.listCompanies();
+	public List<Employer> listEmployers() {
+		return employerDao.listEmployers();
 	}
 
 	/*
@@ -66,8 +66,8 @@ public class CompanyServiceImpl implements CompanyService {
 	 */
 	@Override
 	@Transactional
-	public Company getCompanyById(int id) {
-		return companyDao.getCompanyById(id);
+	public Employer getEmployerById(int id) {
+		return employerDao.getEmployerById(id);
 	}
 
 	/*
@@ -77,7 +77,12 @@ public class CompanyServiceImpl implements CompanyService {
 	 */
 	@Override
 	@Transactional
-	public void removeCompany(int id) {
-		companyDao.removeCompany(id);
+	public void removeEmployer(int id) {
+		employerDao.removeEmployer(id);
+	}
+
+	@Override
+	public Employer findEmployerByName(String name) {
+		return employerDao.findEmployerByName(name);
 	}
 }

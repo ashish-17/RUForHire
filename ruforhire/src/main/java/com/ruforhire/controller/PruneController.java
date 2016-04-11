@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.ruforhire.service.CompanyService;
+import com.ruforhire.service.EmployerService;
 
 /**
  * @author ashish
@@ -18,12 +18,12 @@ import com.ruforhire.service.CompanyService;
 @Controller
 public class PruneController {
 
-	private CompanyService companyService;
+	private EmployerService employerService;
 
     @Autowired(required=true)
-    @Qualifier(value="companyService")
-	public void setCompanyService(CompanyService companyService) {
-		this.companyService = companyService;
+    @Qualifier(value="employerService")
+	public void setEmployerService(EmployerService employerService) {
+		this.employerService = employerService;
 	}
     
     @RequestMapping(value = "/prune", method = RequestMethod.GET)

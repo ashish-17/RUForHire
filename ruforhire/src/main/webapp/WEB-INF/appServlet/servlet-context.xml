@@ -53,7 +53,8 @@
 		<beans:property name="dataSource" ref="dataSource" />
 		<beans:property name="annotatedClasses">
 			<beans:list>
-				<beans:value>com.ruforhire.model.Company</beans:value>
+				<beans:value>com.ruforhire.model.Employer</beans:value>
+				<beans:value>com.ruforhire.model.JobDescription</beans:value>
 			</beans:list>
 		</beans:property>
 		<beans:property name="hibernateProperties">
@@ -65,11 +66,18 @@
 		</beans:property>
 	</beans:bean>
 
-	<beans:bean id="companyDao" class="com.ruforhire.dao.CompanyDaoImpl">
+	<beans:bean id="employerDao" class="com.ruforhire.dao.EmployerDaoImpl">
 		<beans:property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
 	</beans:bean>
-	<beans:bean id="companyService" class="com.ruforhire.service.CompanyServiceImpl">
-		<beans:property name="companyDao" ref="companyDao"></beans:property>
+	<beans:bean id="employerService" class="com.ruforhire.service.EmployerServiceImpl">
+		<beans:property name="employerDao" ref="employerDao"></beans:property>
+	</beans:bean>
+	
+	<beans:bean id="jobDescriptionDao" class="com.ruforhire.dao.JobDescriptionDaoImpl">
+		<beans:property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
+	</beans:bean>
+	<beans:bean id="jobDescriptionService" class="com.ruforhire.service.JobDescriptionServiceImpl">
+		<beans:property name="jobDescriptionDao" ref="jobDescriptionDao"></beans:property>
 	</beans:bean>
 	
 	<context:component-scan base-package="com.ruforhire" />
@@ -92,4 +100,27 @@
 		<beans:constructor-arg name="config" ref="linkedInServiceConfig" />
 	</beans:bean>
 	<!-- end of oauth -->
+	
+	<!-- Glassdoor api -->
+	<beans:bean id="glassDoorServiceConfig" class="com.ruforhire.service.GlassDoorServiceConfig">
+		<beans:constructor-arg value="${app.config.glassdoor.partnerId}" />
+		<beans:constructor-arg value="${app.config.glassdoor.key}"/>
+		<beans:constructor-arg value="${app.config.glassdoor.api}"/>
+	</beans:bean>
+	
+	<beans:bean id="glassDoorServiceProvider" class="com.ruforhire.service.GlassDoorServiceProvider">
+		<beans:constructor-arg name="config" ref="glassDoorServiceConfig" />
+	</beans:bean>
+	<!-- end of Glassdoor api -->
+	
+	<!-- indeed api -->
+	<beans:bean id="indeedServiceConfig" class="com.ruforhire.service.IndeedServiceConfig">
+		<beans:constructor-arg value="${app.config.indeed.publisherId}" />
+		<beans:constructor-arg value="${app.config.indeed.api}"/>
+	</beans:bean>
+	
+	<beans:bean id="indeedServiceProvider" class="com.ruforhire.service.IndeedServiceProvider">
+		<beans:constructor-arg name="config" ref="indeedServiceConfig" />
+	</beans:bean>
+	<!-- end of indeed api -->
 </beans:beans>

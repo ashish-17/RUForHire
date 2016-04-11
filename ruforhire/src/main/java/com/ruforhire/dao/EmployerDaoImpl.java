@@ -11,16 +11,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import com.ruforhire.model.Company;
+import com.ruforhire.model.Employer;
 
 /**
  * @author ashish
  *
  */
 @Repository
-public class CompanyDaoImpl implements CompanyDao {
+public class EmployerDaoImpl implements EmployerDao {
 	
-	private static final Logger logger = LoggerFactory.getLogger(CompanyDaoImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(EmployerDaoImpl.class);
 	 
     private SessionFactory sessionFactory;
      
@@ -32,44 +32,44 @@ public class CompanyDaoImpl implements CompanyDao {
 	 * @see com.ruforhire.dao.CompanyDao#addCompany(com.ruforhire.model.Company)
 	 */
 	@Override
-	public void addCompany(Company c) {
+	public void addEmployer(Employer e) {
 		Session session = this.sessionFactory.getCurrentSession();
-		session.persist(c);
-		logger.info("Company saved - " + c);
+		session.persist(e);
+		logger.info("Employer saved - " + e);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.ruforhire.dao.CompanyDao#updateCompany(com.ruforhire.model.Company)
 	 */
 	@Override
-	public void updateCompany(Company c) {
+	public void updateEmployer(Employer c) {
 		Session session = this.sessionFactory.getCurrentSession();
 		session.update(c);
-		logger.info("Company updated - " + c);
+		logger.info("Employer updated - " + c);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.ruforhire.dao.CompanyDao#listCompanies()
 	 */
 	@Override
-	public List<Company> listCompanies() {
+	public List<Employer> listEmployers() {
 		Session session = this.sessionFactory.getCurrentSession();
-        List<Company> companyList = session.createQuery("from COMPANY").list();
-        for(Company p : companyList){
-            logger.info("Company List::"+p);
+        List<Employer> employerList = session.createQuery("from EMPLOYER").list();
+        for(Employer p : employerList){
+            logger.info("Employer List::"+p);
         }
         
-        return companyList;
+        return employerList;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.ruforhire.dao.CompanyDao#getCompanyById(int)
 	 */
 	@Override
-	public Company getCompanyById(int id) {
+	public Employer getEmployerById(int id) {
 		Session session = this.sessionFactory.getCurrentSession();      
-		Company c = (Company) session.load(Company.class, new Integer(id));
-        logger.info("Company loaded successfully, Company details="+c);
+		Employer c = (Employer) session.load(Employer.class, new Integer(id));
+        logger.info("Employer loaded successfully, Company details="+c);
         return c;
 	}
 
@@ -77,13 +77,24 @@ public class CompanyDaoImpl implements CompanyDao {
 	 * @see com.ruforhire.dao.CompanyDao#removeCompany(int)
 	 */
 	@Override
-	public void removeCompany(int id) {
+	public void removeEmployer(int id) {
 		Session session = this.sessionFactory.getCurrentSession();
-		Company c = (Company) session.load(Company.class, new Integer(id));
+		Employer c = (Employer) session.load(Employer.class, new Integer(id));
         if(null != c){
             session.delete(c);
         }
         
-        logger.info("Company deleted successfully, Company details="+c);
+        logger.info("Employer deleted successfully, Employer details="+c);
+	}
+
+	@Override
+	public Employer findEmployerByName(String name) {
+		Session session = this.sessionFactory.getCurrentSession();
+        List<Employer> employerList = session.createQuery("from EMPLOYER WHERE name=" + name).list();
+        if (employerList == null || employerList.isEmpty()) {
+        	return null;
+        } else {
+        	return employerList.get(0);
+        }
 	}
 }
