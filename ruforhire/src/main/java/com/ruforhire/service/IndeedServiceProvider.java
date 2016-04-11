@@ -83,28 +83,34 @@ public class IndeedServiceProvider {
 		JSONArray jobs = (JSONArray)jsonObject.get("results");
 		for (int jobIndex = 0; jobIndex < jobs.length(); ++jobIndex) {
 			JSONObject job = jobs.getJSONObject(jobIndex);
-			IndeedServiceResponse.Job jd = new IndeedServiceResponse.Job(
-					job.getString("jobkey"), 
-					job.getString("jobtitle"), 
-					job.getString("company"), 
-					job.getString("city"), 
-					job.getString("state"), 
-					job.getString("country"), 
-					job.getString("formattedLocation"), 
-					job.getString("source"), 
-					job.getString("date"), 
-					job.getString("snippet"), 
-					job.getString("url"), 
-					job.getDouble("latitude"), 
-					job.getDouble("longitude"), 
-					job.getBoolean("sponsored"), 
-					job.getBoolean("expired"), 
-					job.getString("formattedLocationFull"), 
-					job.getString("formattedRelativeTime"), 
-					job.getBoolean("noUniqueUrl"));
-			
-			System.out.println(jd);
-			apiResult.getJobs().add(jd);
+			try {
+
+				IndeedServiceResponse.Job jd = new IndeedServiceResponse.Job(
+						job.getString("jobkey"), 
+						job.getString("jobtitle"), 
+						job.getString("company"), 
+						job.getString("city"), 
+						job.getString("state"), 
+						job.getString("country"), 
+						job.getString("formattedLocation"), 
+						job.getString("source"), 
+						job.getString("date"), 
+						job.getString("snippet"), 
+						job.getString("url"), 
+						job.getDouble("latitude"), 
+						job.getDouble("longitude"), 
+						job.getBoolean("sponsored"), 
+						job.getBoolean("expired"), 
+						job.getString("formattedLocationFull"), 
+						job.getString("formattedRelativeTime"), 
+						job.getBoolean("noUniqueUrl"));
+				
+				System.out.println(jd);
+				apiResult.getJobs().add(jd);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				continue;
+			}
 		}
 		
 		return apiResult;

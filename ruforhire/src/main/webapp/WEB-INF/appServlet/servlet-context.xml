@@ -78,6 +78,9 @@
 	</beans:bean>
 	<beans:bean id="jobDescriptionService" class="com.ruforhire.service.JobDescriptionServiceImpl">
 		<beans:property name="jobDescriptionDao" ref="jobDescriptionDao"></beans:property>
+		<beans:property name="indeedServiceProvider" ref="indeedServiceProvider"></beans:property>
+		<beans:property name="employerService" ref="employerService"></beans:property>
+		<beans:property name="glassDoorServiceProvider" ref="glassDoorServiceProvider"></beans:property>
 	</beans:bean>
 	
 	<context:component-scan base-package="com.ruforhire" />

@@ -10,6 +10,7 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ruforhire.model.Employer;
 
@@ -18,6 +19,7 @@ import com.ruforhire.model.Employer;
  *
  */
 @Repository
+@Transactional
 public class EmployerDaoImpl implements EmployerDao {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EmployerDaoImpl.class);
@@ -90,7 +92,7 @@ public class EmployerDaoImpl implements EmployerDao {
 	@Override
 	public Employer findEmployerByName(String name) {
 		Session session = this.sessionFactory.getCurrentSession();
-        List<Employer> employerList = session.createQuery("from EMPLOYER WHERE name=" + name).list();
+        List<Employer> employerList = session.createQuery("from Employer WHERE name='" + name + "'").list();
         if (employerList == null || employerList.isEmpty()) {
         	return null;
         } else {

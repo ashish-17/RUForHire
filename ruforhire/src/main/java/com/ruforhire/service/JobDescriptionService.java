@@ -18,4 +18,5 @@ public interface JobDescriptionService {
 	public List<JobDescription> listJobDescriptions();
 	public JobDescription getJobDescriptionById(int id);
 	public void removeJobDescription(int id);
+	public JobSearchServiceResponse searchJobs(String query, String location, int start);
 }

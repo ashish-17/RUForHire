@@ -336,7 +336,7 @@ public class JobDescription {
 	public String toString() {
 		return "JobDescription [jobkey=" + jobkey + ", jobTitle=" + jobTitle + ", employer=" + employer + ", city="
 				+ city + ", state=" + state + ", country=" + country + ", formattedLocation=" + formattedLocation
-				+ ", source=" + source + ", data=" + date + ", snippet=" + snippet + ", url=" + url + ", latitude="
+				+ ", source=" + source + ", date=" + date + ", snippet=" + snippet + ", url=" + url + ", latitude="
 				+ latitude + ", longitude=" + longitude + ", sponsored=" + sponsored + ", expired=" + expired
 				+ ", formattedLocationFull=" + formattedLocationFull + ", formattedRelativeTime="
 				+ formattedRelativeTime + ", noUniqueUrl=" + noUniqueUrl + "]";

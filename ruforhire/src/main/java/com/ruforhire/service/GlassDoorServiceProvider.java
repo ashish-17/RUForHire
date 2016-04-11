@@ -61,26 +61,32 @@ public class GlassDoorServiceProvider {
 		ApiResponse response = request.send();
 		JSONObject jsonObject = new JSONObject(response.getBody());
 		JSONObject employerInfo = jsonObject.getJSONObject("response");
+		System.out.println(employerInfo.toString());
 		JSONArray employers = (JSONArray)employerInfo.get("employers");
-		JSONObject jsonObjEmployer = employers.getJSONObject(0);
-		System.out.println(jsonObjEmployer.toString());
-		Employer employer = new Employer(
-				jsonObjEmployer.getInt("id"), 
-				jsonObjEmployer.getString("name"), 	
-				jsonObjEmployer.getString("website"), 
-				jsonObjEmployer.getBoolean("isEEP"), 
-				jsonObjEmployer.getString("industry"), 
-				jsonObjEmployer.getString("squareLogo"), 
-				jsonObjEmployer.getDouble("overallRating"), 
-				Double.parseDouble(jsonObjEmployer.getString("cultureAndValuesRating")), 
-				Double.parseDouble(jsonObjEmployer.getString("seniorLeadershipRating")), 
-				Double.parseDouble(jsonObjEmployer.getString("compensationAndBenefitsRating")), 
-				Double.parseDouble(jsonObjEmployer.getString("careerOpportunitiesRating")), 
-				Double.parseDouble(jsonObjEmployer.getString("workLifeBalanceRating")),
-				jsonObjEmployer.getInt("numberOfRatings"));
+		if (employers.length() > 0) {
+
+			JSONObject jsonObjEmployer = employers.getJSONObject(0);
+			System.out.println(jsonObjEmployer.toString());
+			Employer employer = new Employer(
+					jsonObjEmployer.getInt("id"), 
+					jsonObjEmployer.getString("name"), 	
+					jsonObjEmployer.getString("website"), 
+					jsonObjEmployer.getBoolean("isEEP"), 
+					jsonObjEmployer.getString("industry"), 
+					jsonObjEmployer.getString("squareLogo"), 
+					jsonObjEmployer.getDouble("overallRating"), 
+					Double.parseDouble(jsonObjEmployer.getString("cultureAndValuesRating")), 
+					Double.parseDouble(jsonObjEmployer.getString("seniorLeadershipRating")), 
+					Double.parseDouble(jsonObjEmployer.getString("compensationAndBenefitsRating")), 
+					Double.parseDouble(jsonObjEmployer.getString("careerOpportunitiesRating")), 
+					Double.parseDouble(jsonObjEmployer.getString("workLifeBalanceRating")),
+					jsonObjEmployer.getInt("numberOfRatings"));
+			
+			System.out.println(employer.toString());
+			return employer;
+		}
 		
-		System.out.println(employer.toString());
-		return employer;
+		return null;
 	}
 	
 	public static void main (String[] args) throws MalformedURLException, IOException {
