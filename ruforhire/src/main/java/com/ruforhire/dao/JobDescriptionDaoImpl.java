@@ -43,7 +43,7 @@ public class JobDescriptionDaoImpl implements JobDescriptionDao {
 	@Override
 	public List<JobDescription> listJobDescriptions() {
 		Session session = this.sessionFactory.getCurrentSession();
-        List<JobDescription> jobList = session.createQuery("from JOB").list();
+        List<JobDescription> jobList = session.createQuery("from JobDescription").list();
         for(JobDescription jd : jobList){
             logger.info("JobDescription List::"+jd);
         }

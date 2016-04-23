@@ -81,7 +81,7 @@ public class JobDescriptionServiceImpl implements JobDescriptionService {
 					SITE_TYPE.EMPLOYER, 
 					JOB_TYPE.FULL_TIME, 
 					start, 
-					25, 
+					10, 
 					30, 
 					"us");
 

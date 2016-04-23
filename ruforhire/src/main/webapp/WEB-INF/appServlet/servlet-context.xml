@@ -55,6 +55,7 @@
 			<beans:list>
 				<beans:value>com.ruforhire.model.Employer</beans:value>
 				<beans:value>com.ruforhire.model.JobDescription</beans:value>
+				<beans:value>com.ruforhire.model.JobTitleIndex</beans:value>
 			</beans:list>
 		</beans:property>
 		<beans:property name="hibernateProperties">
@@ -66,6 +67,14 @@
 		</beans:property>
 	</beans:bean>
 
+	<context:component-scan base-package="com.ruforhire" />
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<beans:bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<beans:property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
+	</beans:bean>
+	
 	<beans:bean id="employerDao" class="com.ruforhire.dao.EmployerDaoImpl">
 		<beans:property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
 	</beans:bean>
@@ -83,12 +92,11 @@
 		<beans:property name="glassDoorServiceProvider" ref="glassDoorServiceProvider"></beans:property>
 	</beans:bean>
 	
-	<context:component-scan base-package="com.ruforhire" />
-
-	<tx:annotation-driven transaction-manager="transactionManager" />
-
-	<beans:bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+	<beans:bean id="jobTitleIndexDao" class="com.ruforhire.dao.JobTitleIndexDaoImpl">
 		<beans:property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
+	</beans:bean>
+	<beans:bean id="jobTitleService" class="com.ruforhire.service.JobTitleServiceImpl">
+		<beans:property name="jobTitleIndexDao" ref="jobTitleIndexDao"></beans:property>
 	</beans:bean>
 	
 	<!-- oauth -->
