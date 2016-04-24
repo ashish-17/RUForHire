@@ -5,19 +5,25 @@ package com.ruforhire.service;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.scribe.model.Verb;
+import org.springframework.stereotype.Service;
 
+import com.google.common.net.InetAddresses;
 import com.ruforhire.model.Employer;
 
 /**
  * @author ashish
  *
  */
+@Service
 public class GlassDoorServiceProvider {
 
+	private static final String USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36";
+	
 	private GlassDoorServiceConfig config;
 
 	public GlassDoorServiceProvider() {
@@ -42,6 +48,15 @@ public class GlassDoorServiceProvider {
 	public void setConfig(GlassDoorServiceConfig config) {
 		this.config = config;
 	}
+
+	private static String generateRandomIP() {
+		Random random = new Random();
+		String ipString = null;
+		do {
+			ipString = InetAddresses.fromInteger(random.nextInt()).getHostAddress();
+		} while ((ipString.compareTo("0.0.0.0") == 0) || (ipString.compareTo("255.255.255.255") == 0));
+		return ipString;
+	}
 	
 	public Employer getEmployerInformation(String companyName, String city, String state, String country) throws MalformedURLException, IOException {
 		
@@ -50,8 +65,8 @@ public class GlassDoorServiceProvider {
 		request.addQuerystringParameter("format", "json");
 		request.addQuerystringParameter("t.p", config.getPartnerId());
 		request.addQuerystringParameter("t.k", config.getKey());
-		request.addQuerystringParameter("userip", "0.0.0.0");
-		request.addQuerystringParameter("useragent", "");
+		request.addQuerystringParameter("userip", generateRandomIP());
+		request.addQuerystringParameter("useragent", USER_AGENT);
 		request.addQuerystringParameter("action", "employers");
 		request.addQuerystringParameter("q", companyName);
 		request.addQuerystringParameter("city", "");

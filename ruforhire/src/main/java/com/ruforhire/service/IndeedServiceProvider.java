@@ -6,11 +6,13 @@ package com.ruforhire.service;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.scribe.model.Verb;
+import org.springframework.stereotype.Service;
 
 /**
  * @author ashish
  *
  */
+@Service
 public class IndeedServiceProvider {
 
 	private final String API_VERSION = "2";
@@ -102,8 +104,7 @@ public class IndeedServiceProvider {
 						job.getBoolean("sponsored"), 
 						job.getBoolean("expired"), 
 						job.getString("formattedLocationFull"), 
-						job.getString("formattedRelativeTime"), 
-						job.getBoolean("noUniqueUrl"));
+						job.getString("formattedRelativeTime"));
 				
 				System.out.println(jd);
 				apiResult.getJobs().add(jd);

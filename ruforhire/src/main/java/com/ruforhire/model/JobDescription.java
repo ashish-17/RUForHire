@@ -46,7 +46,6 @@ public class JobDescription {
 	private boolean expired;
 	private String formattedLocationFull;
 	private String formattedRelativeTime;
-	private boolean noUniqueUrl;
 	
 	public JobDescription() {
 		super();
@@ -55,7 +54,7 @@ public class JobDescription {
 	public JobDescription(String jobkey, String jobTitle, Employer employer, String city, String state, String country,
 			String formattedLocation, String source, Date date, String snippet, String url, Double latitude,
 			Double longitude, boolean sponsored, boolean expired, String formattedLocationFull,
-			String formattedRelativeTime, boolean noUniqueUrl) {
+			String formattedRelativeTime) {
 		super();
 		this.jobkey = jobkey;
 		this.jobTitle = jobTitle;
@@ -74,7 +73,6 @@ public class JobDescription {
 		this.expired = expired;
 		this.formattedLocationFull = formattedLocationFull;
 		this.formattedRelativeTime = formattedRelativeTime;
-		this.noUniqueUrl = noUniqueUrl;
 	}
 
 	/**
@@ -315,20 +313,6 @@ public class JobDescription {
 		this.formattedRelativeTime = formattedRelativeTime;
 	}
 
-	/**
-	 * @return the noUniqueUrl
-	 */
-	public boolean isNoUniqueUrl() {
-		return noUniqueUrl;
-	}
-
-	/**
-	 * @param noUniqueUrl the noUniqueUrl to set
-	 */
-	public void setNoUniqueUrl(boolean noUniqueUrl) {
-		this.noUniqueUrl = noUniqueUrl;
-	}
-
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -339,6 +323,6 @@ public class JobDescription {
 				+ ", source=" + source + ", date=" + date + ", snippet=" + snippet + ", url=" + url + ", latitude="
 				+ latitude + ", longitude=" + longitude + ", sponsored=" + sponsored + ", expired=" + expired
 				+ ", formattedLocationFull=" + formattedLocationFull + ", formattedRelativeTime="
-				+ formattedRelativeTime + ", noUniqueUrl=" + noUniqueUrl + "]";
+				+ formattedRelativeTime + "]";
 	}
 }

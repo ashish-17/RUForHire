@@ -3,10 +3,13 @@
  */
 package com.ruforhire.dao;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -92,7 +95,10 @@ public class EmployerDaoImpl implements EmployerDao {
 	@Override
 	public Employer findEmployerByName(String name) {
 		Session session = this.sessionFactory.getCurrentSession();
-        List<Employer> employerList = session.createQuery("from Employer WHERE name='" + name + "'").list();
+		Criteria criteria = session.createCriteria(Employer.class)
+									.add(Restrictions.eq("name", name));
+		
+        List<Employer> employerList = criteria.list();
         if (employerList == null || employerList.isEmpty()) {
         	return null;
         } else {

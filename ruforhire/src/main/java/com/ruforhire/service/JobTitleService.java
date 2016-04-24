@@ -3,6 +3,10 @@
  */
 package com.ruforhire.service;
 
+import java.util.List;
+
+import com.ruforhire.model.JobTitleIndex;
+
 /**
  * @author ashish
  *
@@ -10,4 +14,5 @@ package com.ruforhire.service;
 public interface JobTitleService {
 
 	void updateDatabase();
+	List<JobTitleIndex> listPopulerJobTitles();
 }

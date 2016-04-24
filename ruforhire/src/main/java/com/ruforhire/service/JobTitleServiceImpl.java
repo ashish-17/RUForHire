@@ -96,6 +96,12 @@ public class JobTitleServiceImpl implements JobTitleService {
 		}
 	}
 
+	@Override
+	@Transactional
+	public List<JobTitleIndex> listPopulerJobTitles() {
+		return jobTitleIndexDao.listPopulerJobTitles();
+	}
+	
 	public static void main(String[] args) {
 		JobTitleServiceImpl jobTitleService = new JobTitleServiceImpl(new JobTitleIndexDaoImpl());
 		jobTitleService.updateDatabase();

@@ -56,6 +56,7 @@
 				<beans:value>com.ruforhire.model.Employer</beans:value>
 				<beans:value>com.ruforhire.model.JobDescription</beans:value>
 				<beans:value>com.ruforhire.model.JobTitleIndex</beans:value>
+				<beans:value>com.ruforhire.model.QueryVsJobs</beans:value>
 			</beans:list>
 		</beans:property>
 		<beans:property name="hibernateProperties">
@@ -74,7 +75,13 @@
 	<beans:bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<beans:property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
 	</beans:bean>
-	
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+ 
+         <!-- setting maximum upload size -->
+        <beans:property name="maxUploadSize" value="4194304" /> <!--  4mb file size -->
+ 
+    </beans:bean>
+    
 	<beans:bean id="employerDao" class="com.ruforhire.dao.EmployerDaoImpl">
 		<beans:property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
 	</beans:bean>
@@ -90,6 +97,8 @@
 		<beans:property name="indeedServiceProvider" ref="indeedServiceProvider"></beans:property>
 		<beans:property name="employerService" ref="employerService"></beans:property>
 		<beans:property name="glassDoorServiceProvider" ref="glassDoorServiceProvider"></beans:property>
+		<beans:property name="jobTitleService" ref="jobTitleService"></beans:property>
+		<beans:property name="queryVsJobsService" ref="queryVsJobsService"></beans:property>
 	</beans:bean>
 	
 	<beans:bean id="jobTitleIndexDao" class="com.ruforhire.dao.JobTitleIndexDaoImpl">
@@ -97,6 +106,13 @@
 	</beans:bean>
 	<beans:bean id="jobTitleService" class="com.ruforhire.service.JobTitleServiceImpl">
 		<beans:property name="jobTitleIndexDao" ref="jobTitleIndexDao"></beans:property>
+	</beans:bean>
+	
+	<beans:bean id="queryVsJobsDao" class="com.ruforhire.dao.QueryVsJobsDaoImpl">
+		<beans:property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
+	</beans:bean>
+	<beans:bean id="queryVsJobsService" class="com.ruforhire.service.QueryVsJobsServiceImpl">
+		<beans:property name="queryVsJobsDao" ref="queryVsJobsDao"></beans:property>
 	</beans:bean>
 	
 	<!-- oauth -->

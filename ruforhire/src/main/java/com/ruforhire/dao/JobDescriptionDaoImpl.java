@@ -9,6 +9,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ruforhire.model.JobDescription;
 
@@ -16,6 +18,8 @@ import com.ruforhire.model.JobDescription;
  * @author ashish
  *
  */
+@Repository
+@Transactional
 public class JobDescriptionDaoImpl implements JobDescriptionDao {
 
 	private static final Logger logger = LoggerFactory.getLogger(JobDescriptionDaoImpl.class);

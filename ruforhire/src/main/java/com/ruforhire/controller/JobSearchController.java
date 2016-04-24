@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ruforhire.service.JobDescriptionService;
 import com.ruforhire.service.JobSearchServiceResponse;
+import com.ruforhire.service.IndeedServiceProvider.JOB_TYPE;
+import com.ruforhire.service.IndeedServiceProvider.SORTBY;
 
 /**
  * @author ashish
@@ -32,7 +34,7 @@ public class JobSearchController {
 			@PathVariable String location,
 			@PathVariable int start) {
 		
-		JobSearchServiceResponse response = jobDescriptionService.searchJobs(query, location, start);
+		JobSearchServiceResponse response = jobDescriptionService.searchJobs(query, location, SORTBY.DATE, JOB_TYPE.INTERNSHIP, start);
 		return response;
 	}
 	

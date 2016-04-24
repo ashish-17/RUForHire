@@ -9,6 +9,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ruforhire.model.JobTitleIndex;
 
@@ -16,6 +18,8 @@ import com.ruforhire.model.JobTitleIndex;
  * @author ashish
  *
  */
+@Repository
+@Transactional
 public class JobTitleIndexDaoImpl implements JobTitleIndexDao {
 
 	private static final Logger logger = LoggerFactory.getLogger(JobTitleIndexDaoImpl.class);

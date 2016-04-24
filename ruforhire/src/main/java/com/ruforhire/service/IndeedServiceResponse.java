@@ -124,7 +124,7 @@ public class IndeedServiceResponse {
 		private boolean expired;
 		private String formattedLocationFull;
 		private String formattedRelativeTime;
-		private boolean noUniqueUrl;
+
 		public Job() {
 			super();
 			// TODO Auto-generated constructor stub
@@ -132,7 +132,7 @@ public class IndeedServiceResponse {
 		public Job(String jobkey, String jobTitle, String employerName, String city, String state, String country,
 				String formattedLocation, String source, String date, String snippet, String url, Double latitude,
 				Double longitude, boolean sponsored, boolean expired, String formattedLocationFull,
-				String formattedRelativeTime, boolean noUniqueUrl) {
+				String formattedRelativeTime) {
 			super();
 			this.jobkey = jobkey;
 			this.jobTitle = jobTitle;
@@ -151,7 +151,6 @@ public class IndeedServiceResponse {
 			this.expired = expired;
 			this.formattedLocationFull = formattedLocationFull;
 			this.formattedRelativeTime = formattedRelativeTime;
-			this.noUniqueUrl = noUniqueUrl;
 		}
 		/**
 		 * @return the jobkey
@@ -357,18 +356,6 @@ public class IndeedServiceResponse {
 		public void setFormattedRelativeTime(String formattedRelativeTime) {
 			this.formattedRelativeTime = formattedRelativeTime;
 		}
-		/**
-		 * @return the noUniqueUrl
-		 */
-		public boolean isNoUniqueUrl() {
-			return noUniqueUrl;
-		}
-		/**
-		 * @param noUniqueUrl the noUniqueUrl to set
-		 */
-		public void setNoUniqueUrl(boolean noUniqueUrl) {
-			this.noUniqueUrl = noUniqueUrl;
-		}
 		/* (non-Javadoc)
 		 * @see java.lang.Object#toString()
 		 */
@@ -379,7 +366,7 @@ public class IndeedServiceResponse {
 					+ ", source=" + source + ", date=" + date + ", snippet=" + snippet + ", url=" + url + ", latitude="
 					+ latitude + ", longitude=" + longitude + ", sponsored=" + sponsored + ", expired=" + expired
 					+ ", formattedLocationFull=" + formattedLocationFull + ", formattedRelativeTime="
-					+ formattedRelativeTime + ", noUniqueUrl=" + noUniqueUrl + "]";
+					+ formattedRelativeTime + "]";
 		}
 	}
 }
