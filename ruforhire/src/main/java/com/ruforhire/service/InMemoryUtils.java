@@ -10,10 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.ruforhire.model.InvertedListJobTitles;
 import com.ruforhire.model.JobDescription;
@@ -26,9 +31,10 @@ import com.ruforhire.utils.Stopwords;
  * @author ashish
  *
  */
+@Component
+@Scope(value = "singleton")
 public class InMemoryUtils {
 
-	private static InMemoryUtils instance;
 	private InvertedListJobTitles invertedListJobs;
 	private Map<String, JobTitleIndex> titleMap;
 	private Stopwords stopWords;
@@ -41,20 +47,13 @@ public class InMemoryUtils {
 	@Qualifier("queryVsJobsService")
 	private QueryVsJobsService queryVsJobsService;
 	
-	private InMemoryUtils() {
+	public InMemoryUtils() {
 		invertedListJobs = new InvertedListJobTitles();
 		titleMap = new HashMap<>();
 		stopWords = new Stopwords();
 	}
 	
-	public static InMemoryUtils getInstance() {
-		if (instance == null) {
-			instance = new InMemoryUtils();
-		}
-		
-		return instance;
-	}
-	
+	@PostConstruct
 	public void init() {
 		List<JobTitleIndex> titles = jobTitleService.listPopulerJobTitles();
 		for (JobTitleIndex title : titles) {
@@ -70,15 +69,18 @@ public class InMemoryUtils {
 				if (!stopWords.is(str)) {
 					Stemmer stemmer = new Stemmer();
 					stemmer.add(str.toCharArray(), str.length());
+					stemmer.stem();
 					invertedListJobs.add(stemmer.toString(), titleMap.get(query.getQuery()));
 				}
 			}
-			String[] snippet = jd.getSnippet().split("\\s+");
+			
+			String[] snippet = Jsoup.parse(jd.getSnippet()).text().split("\\s+");
 			for (String str : snippet) {
 				str = str.toLowerCase();
 				if (!stopWords.is(str)) {
 					Stemmer stemmer = new Stemmer();
 					stemmer.add(str.toCharArray(), str.length());
+					stemmer.stem();
 					invertedListJobs.add(stemmer.toString(), titleMap.get(query.getQuery()));
 				}
 			}
@@ -96,6 +98,7 @@ public class InMemoryUtils {
 			if (!stopWords.is(word)) {
 				Stemmer stemmer = new Stemmer();
 				stemmer.add(word.toCharArray(), word.length());
+				stemmer.stem();
 				List<JobTitleIndex> matchingJobs = invertedListJobs.get(stemmer.toString());
 				if (matchingJobs != null) {
 					for (JobTitleIndex job : matchingJobs) {

@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,6 +28,9 @@ public class FileUploadController {
 
 	private static final Logger logger = LoggerFactory.getLogger(FileUploadController.class);
 
+	@Autowired
+	private InMemoryUtils inMemoryUtils = null;
+	
     @RequestMapping(value = "/uploadFile", method = RequestMethod.GET)
     public String showFileUploadPage() {
     	return "upload";
@@ -54,8 +58,7 @@ public class FileUploadController {
 				stream.write(bytes);
 				stream.close();
 
-				InMemoryUtils.getInstance().init();
-				String title = InMemoryUtils.getInstance().getMatchingJobProfile(serverFile).getTitle();
+				String title = inMemoryUtils.getMatchingJobProfile(serverFile).getTitle();
 				System.out.println("Matched = " + title);
 				
 				serverFile.delete();
