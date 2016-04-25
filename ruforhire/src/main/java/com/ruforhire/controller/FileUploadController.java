@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ruforhire.service.InMemoryUtils;
+
 /**
  * @author ashish
  *
@@ -52,6 +54,12 @@ public class FileUploadController {
 				stream.write(bytes);
 				stream.close();
 
+				InMemoryUtils.getInstance().init();
+				String title = InMemoryUtils.getInstance().getMatchingJobProfile(serverFile).getTitle();
+				System.out.println("Matched = " + title);
+				
+				serverFile.delete();
+				
 				logger.info("Server File Location=" + serverFile.getAbsolutePath());
 
 				return "You successfully uploaded file=" + name;

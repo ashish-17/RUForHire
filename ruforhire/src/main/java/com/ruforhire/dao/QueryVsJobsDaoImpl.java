@@ -70,4 +70,15 @@ public class QueryVsJobsDaoImpl implements QueryVsJobsDao {
 		long count = (long) criteria.uniqueResult();
 		return count;
 	}
+
+	@Override
+	public List<QueryVsJobs> listJobsVsQuery() {
+		Session session = this.sessionFactory.getCurrentSession();
+        List<QueryVsJobs> queryList = session.createQuery("from QueryVsJobs").list();
+        for(QueryVsJobs query : queryList){
+            logger.info("Query List::"+query);
+        }
+        
+        return queryList;
+	}
 }

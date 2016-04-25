@@ -15,6 +15,7 @@ import com.ruforhire.model.QueryVsJobs;
 public interface QueryVsJobsDao {
 
 	void addQuery(QueryVsJobs q);
+	List<QueryVsJobs> listJobsVsQuery();
 	List<JobDescription> getJobsForQuery(String query);
 	long getJobCountForQuery(String query);
 	long getCount();

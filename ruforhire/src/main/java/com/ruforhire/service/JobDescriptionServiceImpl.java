@@ -3,12 +3,10 @@
  */
 package com.ruforhire.service;
 
-import java.io.IOException;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Random;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +19,6 @@ import com.ruforhire.model.QueryVsJobs;
 import com.ruforhire.service.IndeedServiceProvider.JOB_TYPE;
 import com.ruforhire.service.IndeedServiceProvider.SITE_TYPE;
 import com.ruforhire.service.IndeedServiceProvider.SORTBY;
-
-import com.google.common.net.InetAddresses;
 
 /**
  * @author ashish

@@ -50,4 +50,9 @@ public class QueryVsJobsServiceImpl implements QueryVsJobsService {
 	public long getJobCountForQuery(String query) {
 		return queryVsJobsDao.getJobCountForQuery(query);
 	}
+
+	@Override
+	public List<QueryVsJobs> listJobsVsQuery() {
+		return queryVsJobsDao.listJobsVsQuery();
+	}
 }
