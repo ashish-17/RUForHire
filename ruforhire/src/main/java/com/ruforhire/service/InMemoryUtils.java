@@ -5,6 +5,8 @@ package com.ruforhire.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,8 @@ import com.ruforhire.utils.Stopwords;
 @Scope(value = "singleton")
 public class InMemoryUtils {
 
+	private static final int COUNT_MATCHING_JOBS = 5;
+	
 	private InvertedListJobTitles invertedListJobs;
 	private Map<String, JobTitleIndex> titleMap;
 	private Stopwords stopWords;
@@ -87,7 +91,7 @@ public class InMemoryUtils {
 		}
 	}
 	
-	public JobTitleIndex getMatchingJobProfile(File file) throws IOException {
+	public List<JobTitleIndex> getMatchingJobProfiles(File file) throws IOException {
 		PDDocument pddDocument=PDDocument.load(file);
 	    PDFTextStripper textStripper = new PDFTextStripper();
 	    String content = textStripper.getText(pddDocument);
@@ -114,13 +118,43 @@ public class InMemoryUtils {
 	    
 	    int maxVotes = 0;
 	    JobTitleIndex winningJob = null;
+	    MatchingJobProfileAnalyticsData[] anayticsData = new MatchingJobProfileAnalyticsData[votes.size()];
+	    int i = 0;
 	    for (Entry<JobTitleIndex, Integer> entry : votes.entrySet()) {
 	    	if (entry.getValue() > maxVotes) {
 	    		maxVotes = entry.getValue();
 	    		winningJob = entry.getKey();
 	    	}
+	    	
+	    	anayticsData[i] = new MatchingJobProfileAnalyticsData(entry.getKey(), entry.getValue());
+	    	i++;
 	    }
 	    
-	    return winningJob;
+	    Arrays.sort(anayticsData);
+	    List<JobTitleIndex> topMatchingJobs = new ArrayList<>();
+	    for (i = 0; i < COUNT_MATCHING_JOBS; ++i) {
+	    	topMatchingJobs.add(anayticsData[i].title);
+	    }
+	    
+	    return topMatchingJobs;
+	}
+	
+	static class MatchingJobProfileAnalyticsData implements Comparable<MatchingJobProfileAnalyticsData> {
+		JobTitleIndex title;
+		Integer countVotes;
+		public MatchingJobProfileAnalyticsData(JobTitleIndex title, Integer countVotes) {
+			super();
+			this.title = title;
+			this.countVotes = countVotes;
+		}
+		
+		@Override
+		public int compareTo(MatchingJobProfileAnalyticsData o) {
+			if (this.countVotes != o.countVotes) {
+				return (o.countVotes - this.countVotes);
+			} else {
+				return title.getPk() - o.title.getPk();
+			}
+		}
 	}
 }
