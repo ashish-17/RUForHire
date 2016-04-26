@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.jsoup.Jsoup;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Component;
 
 import com.ruforhire.model.InvertedListJobTitles;
 import com.ruforhire.model.JobDescription;
+import com.ruforhire.model.JobDescriptionVector;
 import com.ruforhire.model.JobTitleIndex;
 import com.ruforhire.model.QueryVsJobs;
 import com.ruforhire.utils.Stemmer;
@@ -41,6 +43,11 @@ public class InMemoryUtils {
 	
 	private InvertedListJobTitles invertedListJobs;
 	private Map<String, JobTitleIndex> titleMap;
+	private List<QueryVsJobs> queries;
+	private Map<JobDescription, JobDescriptionVector> vectors;
+	private Map<String, ArrayList<JobDescription>> queryVsJobs;
+	
+	@Autowired
 	private Stopwords stopWords;
 
 	@Autowired
@@ -54,7 +61,9 @@ public class InMemoryUtils {
 	public InMemoryUtils() {
 		invertedListJobs = new InvertedListJobTitles();
 		titleMap = new HashMap<>();
-		stopWords = new Stopwords();
+		vectors = new HashMap<>();
+		queries = new ArrayList<>();
+		queryVsJobs = new HashMap<>();
 	}
 	
 	@PostConstruct
@@ -64,13 +73,13 @@ public class InMemoryUtils {
 			titleMap.put(title.getTitle(), title);
 		}
 		
-		List<QueryVsJobs> queries = queryVsJobsService.listJobsVsQuery();
+		queries = queryVsJobsService.listJobsVsQuery();
 		for (QueryVsJobs query : queries) {
 			JobDescription jd = query.getJobDescription();
 			String[] title = jd.getJobTitle().split("\\s+");
 			for (String str : title) {
-				str = str.toLowerCase();
-				if (!stopWords.is(str)) {
+				str = str.trim().toLowerCase();
+				if (!stopWords.is(str) && StringUtils.isAlphanumeric(str)) {
 					Stemmer stemmer = new Stemmer();
 					stemmer.add(str.toCharArray(), str.length());
 					stemmer.stem();
@@ -80,29 +89,47 @@ public class InMemoryUtils {
 			
 			String[] snippet = Jsoup.parse(jd.getSnippet()).text().split("\\s+");
 			for (String str : snippet) {
-				str = str.toLowerCase();
-				if (!stopWords.is(str)) {
+				str = str.trim().toLowerCase();
+				if (!stopWords.is(str) && StringUtils.isAlphanumeric(str)) {
 					Stemmer stemmer = new Stemmer();
 					stemmer.add(str.toCharArray(), str.length());
 					stemmer.stem();
 					invertedListJobs.add(stemmer.toString(), titleMap.get(query.getQuery()));
 				}
 			}
+			
+			if (!queryVsJobs.containsKey(query.getQuery())) {
+				queryVsJobs.put(query.getQuery(), new ArrayList<JobDescription>());
+			}
+
+			queryVsJobs.get(query.getQuery()).add(jd);
 		}
 	}
 	
 	public List<JobTitleIndex> getMatchingJobProfiles(File file) throws IOException {
+
+		if (vectors.size() == 0) {
+			for (QueryVsJobs query : queries) {
+				JobDescription jd = query.getJobDescription();
+				vectors.put(jd, new JobDescriptionVector(jd, invertedListJobs.getWordList()));
+			}
+		}
+		
 		PDDocument pddDocument=PDDocument.load(file);
 	    PDFTextStripper textStripper = new PDFTextStripper();
 	    String content = textStripper.getText(pddDocument);
+	    pddDocument.close();
+	    
 	    String[] words = content.split("\\s+");
+	    List<String> matchedWords = new ArrayList<>();
 	    Map<JobTitleIndex, Integer> votes = new HashMap<>();
 	    for (String word : words) {
 	    	word = word.toLowerCase();
-			if (!stopWords.is(word)) {
+			if (!stopWords.is(word) && StringUtils.isAlphanumeric(word)) {
 				Stemmer stemmer = new Stemmer();
 				stemmer.add(word.toCharArray(), word.length());
 				stemmer.stem();
+				matchedWords.add(stemmer.toString());
 				List<JobTitleIndex> matchingJobs = invertedListJobs.get(stemmer.toString());
 				if (matchingJobs != null) {
 					for (JobTitleIndex job : matchingJobs) {
@@ -132,9 +159,19 @@ public class InMemoryUtils {
 	    
 	    Arrays.sort(anayticsData);
 	    List<JobTitleIndex> topMatchingJobs = new ArrayList<>();
+	    JobDescriptionVector jdVector = new JobDescriptionVector(invertedListJobs.getWordList().size());
+	    
 	    for (i = 0; i < COUNT_MATCHING_JOBS; ++i) {
 	    	topMatchingJobs.add(anayticsData[i].title);
+	    	for (JobDescription jd : queryVsJobs.get(anayticsData[i].title.getTitle())) {
+	    		jdVector.addVector(vectors.get(jd));
+	    	}
 	    }
+	    
+	    JobDescriptionVector resumeVector = new JobDescriptionVector(content, invertedListJobs.getWordList());
+	    jdVector.logicalAndVector(resumeVector);
+	    
+	    jdVector.getImportantWords(invertedListJobs.getWordList());
 	    
 	    return topMatchingJobs;
 	}

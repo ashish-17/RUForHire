@@ -32,6 +32,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 /**
  * Class that can test whether a given string is a stop word.
  * Lowercases all words before the test. 
@@ -67,6 +70,8 @@ import java.util.Vector;
  * @author FracPete (fracpete at waikato dot ac dot nz)
  * @version $Revision: 8034 $
  */
+@Component
+@Scope(value = "singleton")
 public class Stopwords {
   
   /** The hash set containing the list of stopwords */

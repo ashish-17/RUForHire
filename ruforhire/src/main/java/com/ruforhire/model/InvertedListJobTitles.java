@@ -38,4 +38,8 @@ public class InvertedListJobTitles {
 		
 		return null;
 	}
+	
+	public List<String> getWordList() {
+		return new ArrayList<>(invertedList.keySet());
+	}
 }
