@@ -145,7 +145,7 @@ public class JobDescriptionServiceImpl implements JobDescriptionService {
 						job.getFormattedLocationFull(), 
 						job.getFormattedRelativeTime());
 				
-				System.out.println(jd);
+				//System.out.println(jd);
 				response.getJobs().add(jd);
 			}
 			
@@ -172,16 +172,20 @@ public class JobDescriptionServiceImpl implements JobDescriptionService {
 				long countJobsForQuery = queryVsJobsService.getJobCountForQuery(jobTitle.getTitle());
 				if (countJobsForQuery < COUNT_JOBS_PER_TITLE) {
 					for (int query = 0; query < (COUNT_JOBS_PER_TITLE - countJobsForQuery) / JOBS_FETCHED_PER_QUERY; ++query) {
-						JobSearchServiceResponse response = null;
-						if (jobTitle.getTitle().indexOf("intern") == -1) {
-							response = searchJobs(jobTitle.getTitle(), "us", SORTBY.RELEVANCE, JOB_TYPE.FULL_TIME, query*JOBS_FETCHED_PER_QUERY + (int)countJobsForQuery, JOBS_FETCHED_PER_QUERY);
-						} else {
-							response = searchJobs(jobTitle.getTitle(), "us", SORTBY.RELEVANCE, JOB_TYPE.INTERNSHIP, query*JOBS_FETCHED_PER_QUERY + (int)countJobsForQuery, JOBS_FETCHED_PER_QUERY);
-						}
-						
-						for (JobDescription job : response.getJobs()) {
-							jobDescriptionDao.addJobDescription(job);
-							queryVsJobsService.addQuery(new QueryVsJobs(jobTitle.getTitle(), job));
+						try {
+							JobSearchServiceResponse response = null;
+							if (jobTitle.getTitle().indexOf("intern") == -1) {
+								response = searchJobs(jobTitle.getTitle(), "us", SORTBY.RELEVANCE, JOB_TYPE.FULL_TIME, query*JOBS_FETCHED_PER_QUERY + (int)countJobsForQuery, JOBS_FETCHED_PER_QUERY);
+							} else {
+								response = searchJobs(jobTitle.getTitle(), "us", SORTBY.RELEVANCE, JOB_TYPE.INTERNSHIP, query*JOBS_FETCHED_PER_QUERY + (int)countJobsForQuery, JOBS_FETCHED_PER_QUERY);
+							}
+							
+							for (JobDescription job : response.getJobs()) {
+								jobDescriptionDao.addJobDescription(job);
+								queryVsJobsService.addQuery(new QueryVsJobs(jobTitle.getTitle(), job));
+							}
+						} catch (Exception e) {
+							continue;
 						}
 					}
 				}

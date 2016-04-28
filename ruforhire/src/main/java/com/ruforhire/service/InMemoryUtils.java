@@ -68,41 +68,43 @@ public class InMemoryUtils {
 	
 	@PostConstruct
 	public void init() {
-		List<JobTitleIndex> titles = jobTitleService.listPopulerJobTitles();
-		for (JobTitleIndex title : titles) {
-			titleMap.put(title.getTitle(), title);
-		}
-		
-		queries = queryVsJobsService.listJobsVsQuery();
-		for (QueryVsJobs query : queries) {
-			JobDescription jd = query.getJobDescription();
-			String[] title = jd.getJobTitle().split("\\W+");
-			for (String str : title) {
-				str = str.trim().toLowerCase();
-				if (!stopWords.is(str) && StringUtils.isAlphanumeric(str) && !StringUtils.isNumeric(str)) {
-					Stemmer stemmer = new Stemmer();
-					stemmer.add(str.toCharArray(), str.length());
-					stemmer.stem();
-					invertedListJobs.add(stemmer.toString(), titleMap.get(query.getQuery()));
-				}
+		if (queries.size() == 0) {
+			List<JobTitleIndex> titles = jobTitleService.listPopulerJobTitles();
+			for (JobTitleIndex title : titles) {
+				titleMap.put(title.getTitle(), title);
 			}
 			
-			String[] snippet = Jsoup.parse(jd.getSnippet()).text().split("\\W+");
-			for (String str : snippet) {
-				str = str.trim().toLowerCase();
-				if (!stopWords.is(str) && StringUtils.isAlphanumeric(str) && !StringUtils.isNumeric(str)) {
-					Stemmer stemmer = new Stemmer();
-					stemmer.add(str.toCharArray(), str.length());
-					stemmer.stem();
-					invertedListJobs.add(stemmer.toString(), titleMap.get(query.getQuery()));
+			queries = queryVsJobsService.listJobsVsQuery();
+			for (QueryVsJobs query : queries) {
+				JobDescription jd = query.getJobDescription();
+				String[] title = jd.getJobTitle().split("\\W+");
+				for (String str : title) {
+					str = str.trim().toLowerCase();
+					if (!stopWords.is(str) && StringUtils.isAlphanumeric(str) && !StringUtils.isNumeric(str)) {
+						Stemmer stemmer = new Stemmer();
+						stemmer.add(str.toCharArray(), str.length());
+						stemmer.stem();
+						invertedListJobs.add(stemmer.toString(), titleMap.get(query.getQuery()));
+					}
 				}
-			}
-			
-			if (!queryVsJobs.containsKey(query.getQuery())) {
-				queryVsJobs.put(query.getQuery(), new ArrayList<JobDescription>());
-			}
+				
+				String[] snippet = Jsoup.parse(jd.getSnippet()).text().split("\\W+");
+				for (String str : snippet) {
+					str = str.trim().toLowerCase();
+					if (!stopWords.is(str) && StringUtils.isAlphanumeric(str) && !StringUtils.isNumeric(str)) {
+						Stemmer stemmer = new Stemmer();
+						stemmer.add(str.toCharArray(), str.length());
+						stemmer.stem();
+						invertedListJobs.add(stemmer.toString(), titleMap.get(query.getQuery()));
+					}
+				}
+				
+				if (!queryVsJobs.containsKey(query.getQuery())) {
+					queryVsJobs.put(query.getQuery(), new ArrayList<JobDescription>());
+				}
 
-			queryVsJobs.get(query.getQuery()).add(jd);
+				queryVsJobs.get(query.getQuery()).add(jd);
+			}
 		}
 	}
 	

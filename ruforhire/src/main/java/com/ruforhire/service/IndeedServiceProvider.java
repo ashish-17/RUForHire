@@ -106,7 +106,7 @@ public class IndeedServiceProvider {
 						job.getString("formattedLocationFull"), 
 						job.getString("formattedRelativeTime"));
 				
-				System.out.println(jd);
+				//System.out.println(jd);
 				apiResult.getJobs().add(jd);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());

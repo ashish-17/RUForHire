@@ -74,20 +74,20 @@
 		<div class="container">
 			<div class="header_section">
 				<div class="logo">
-					<a href="javascript:void(0)">RUForHire ?</a>
+					<a href="<c:url value="/" />">RUForHire ?</a>
 				</div>
 				<nav class="nav" id="nav">
 					<ul class="toggle">
 						<li><a href="<c:url value="/" />">Home</a></li>
 						<li><a href="<c:url value="/jobsearch" />">Jobs</a></li>
-						<li><a href="#work_outer">Upload Resume</a>
-						<li><a href="#work_outer">Contact Us</a>
+						<li><a href="<c:url value="/uploadFile" />">Upload Resume</a>
+						<li><a href="#">Contact Us</a>
 					</ul>
 					<ul class="">
 						<li><a href="<c:url value="/" />">Home</a></li>
 						<li><a href="<c:url value="/jobsearch" />">Jobs</a></li>
-						<li><a href="#work_outer">Upload Resume</a></li>
-						<li><a href="#work_outer">Contact Us</a>
+						<li><a href="<c:url value="/uploadFile" />">Upload Resume</a></li>
+						<li><a href="#">Contact Us</a>
 					</ul>
 				</nav>
 				<a class="res-nav_click animated wobble wow"

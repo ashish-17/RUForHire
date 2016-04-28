@@ -16,7 +16,7 @@ import com.ruforhire.service.IndeedServiceProvider.SORTBY;
 public interface JobDescriptionService {
 
 	public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z"; //Sat, 05 Mar 2016 00:54:36 GMT
-	public static final int COUNT_JOBS_PER_TITLE = 100;
+	public static final int COUNT_JOBS_PER_TITLE = 300;
 	public static final int JOBS_FETCHED_PER_QUERY = 25;
 	
 	public void addJobDescription(JobDescription jd);
