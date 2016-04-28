@@ -35,7 +35,7 @@ public class LoginController {
 		this.jobDescriptionService = jobDescriptionService;
 	}
     
-	@RequestMapping(value={"/", "/signin", "/login"}, method = RequestMethod.GET)
+	@RequestMapping(value={"/signin", "/login"}, method = RequestMethod.GET)
 	public ModelAndView login() {
 		ModelAndView mav = new ModelAndView();
 		//jobTitleService.updateDatabase();

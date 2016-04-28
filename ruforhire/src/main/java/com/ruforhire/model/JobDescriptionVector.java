@@ -22,7 +22,7 @@ import com.ruforhire.utils.Stopwords;
  */
 public class JobDescriptionVector {
 
-	private static final int MAX_IMPORTANT_WORDS = 10;
+	private static final int MAX_IMPORTANT_WORDS = 25;
 	
 	private int[] vector;
 	private Stopwords stopWords = new Stopwords();
@@ -34,11 +34,11 @@ public class JobDescriptionVector {
 	public JobDescriptionVector(String content, List<String> data) {
 		vector = new int[data.size()];
 		int index = 0;
-		List<String> words = Arrays.asList(content.toLowerCase().split("\\s+"));
+		List<String> words = Arrays.asList(content.toLowerCase().split("\\W+"));
 		List<String> wordsToBeMatched = new ArrayList<>();
 		for (String word : words) {
 			word = word.trim().toLowerCase();
-			if (!stopWords.is(word) && StringUtils.isAlphanumeric(word)) {
+			if (!stopWords.is(word) && StringUtils.isAlphanumeric(word) && !StringUtils.isNumeric(word)) {
 				Stemmer stemmer = new Stemmer();
 				stemmer.add(word.toCharArray(), word.length());
 				stemmer.stem();
@@ -51,7 +51,6 @@ public class JobDescriptionVector {
 		for (String str : data) {
 			if (wordsToBeMatched.contains(str)) {
 				vector[index]++;
-				System.out.println("Matched " + str + " - " + vector[index]);
 			}
 
 			index++;
@@ -61,13 +60,13 @@ public class JobDescriptionVector {
 	public JobDescriptionVector(JobDescription jd, List<String> data) {
 		vector = new int[data.size()];
 		int index = 0;
-		List<String> title = Arrays.asList(Jsoup.parse(jd.getJobTitle()).text().split("\\s+"));
-		List<String> snippet = Arrays.asList(Jsoup.parse(jd.getSnippet()).text().split(" "));
+		List<String> title = Arrays.asList(Jsoup.parse(jd.getJobTitle()).text().split("\\W+"));
+		List<String> snippet = Arrays.asList(Jsoup.parse(jd.getSnippet()).text().split("\\W+"));
 		
 		List<String> wordsToBeMatched = new ArrayList<>();
 		for (String word : title) {
 			word = word.trim().toLowerCase();
-			if (!stopWords.is(word) && StringUtils.isAlphanumeric(word)) {
+			if (!stopWords.is(word) && StringUtils.isAlphanumeric(word) && !StringUtils.isNumeric(word)) {
 				Stemmer stemmer = new Stemmer();
 				stemmer.add(word.toCharArray(), word.length());
 				stemmer.stem();
@@ -77,7 +76,7 @@ public class JobDescriptionVector {
 		}
 		for (String word : snippet) {
 			word = word.trim().toLowerCase();
-			if (!stopWords.is(word) && StringUtils.isAlphanumeric(word)) {
+			if (!stopWords.is(word) && StringUtils.isAlphanumeric(word) && !StringUtils.isNumeric(word)) {
 				Stemmer stemmer = new Stemmer();
 				stemmer.add(word.toCharArray(), word.length());
 				stemmer.stem();

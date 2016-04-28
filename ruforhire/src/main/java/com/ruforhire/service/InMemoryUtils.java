@@ -76,10 +76,10 @@ public class InMemoryUtils {
 		queries = queryVsJobsService.listJobsVsQuery();
 		for (QueryVsJobs query : queries) {
 			JobDescription jd = query.getJobDescription();
-			String[] title = jd.getJobTitle().split("\\s+");
+			String[] title = jd.getJobTitle().split("\\W+");
 			for (String str : title) {
 				str = str.trim().toLowerCase();
-				if (!stopWords.is(str) && StringUtils.isAlphanumeric(str)) {
+				if (!stopWords.is(str) && StringUtils.isAlphanumeric(str) && !StringUtils.isNumeric(str)) {
 					Stemmer stemmer = new Stemmer();
 					stemmer.add(str.toCharArray(), str.length());
 					stemmer.stem();
@@ -87,10 +87,10 @@ public class InMemoryUtils {
 				}
 			}
 			
-			String[] snippet = Jsoup.parse(jd.getSnippet()).text().split("\\s+");
+			String[] snippet = Jsoup.parse(jd.getSnippet()).text().split("\\W+");
 			for (String str : snippet) {
 				str = str.trim().toLowerCase();
-				if (!stopWords.is(str) && StringUtils.isAlphanumeric(str)) {
+				if (!stopWords.is(str) && StringUtils.isAlphanumeric(str) && !StringUtils.isNumeric(str)) {
 					Stemmer stemmer = new Stemmer();
 					stemmer.add(str.toCharArray(), str.length());
 					stemmer.stem();
@@ -120,12 +120,12 @@ public class InMemoryUtils {
 	    String content = textStripper.getText(pddDocument);
 	    pddDocument.close();
 	    
-	    String[] words = content.split("\\s+");
+	    String[] words = content.split("\\W+");
 	    List<String> matchedWords = new ArrayList<>();
 	    Map<JobTitleIndex, Integer> votes = new HashMap<>();
 	    for (String word : words) {
 	    	word = word.toLowerCase();
-			if (!stopWords.is(word) && StringUtils.isAlphanumeric(word)) {
+			if (!stopWords.is(word) && StringUtils.isAlphanumeric(word) && !StringUtils.isNumeric(word)) {
 				Stemmer stemmer = new Stemmer();
 				stemmer.add(word.toCharArray(), word.length());
 				stemmer.stem();
@@ -174,6 +174,87 @@ public class InMemoryUtils {
 	    jdVector.getImportantWords(invertedListJobs.getWordList());
 	    
 	    return topMatchingJobs;
+	}
+
+	public List<JobTitleIndex> getMatchingJobProfilesUsingCosineSimilarity(File file) throws IOException {
+
+		if (vectors.size() == 0) {
+			for (QueryVsJobs query : queries) {
+				JobDescription jd = query.getJobDescription();
+				vectors.put(jd, new JobDescriptionVector(jd, invertedListJobs.getWordList()));
+			}
+		}
+		
+		PDDocument pddDocument=PDDocument.load(file);
+	    PDFTextStripper textStripper = new PDFTextStripper();
+	    String content = textStripper.getText(pddDocument);
+	    pddDocument.close();
+
+	    JobDescriptionVector resumeVector = new JobDescriptionVector(content, invertedListJobs.getWordList());
+	    CosineSimilarityAnalyticsData[] matchingResults = new CosineSimilarityAnalyticsData[queries.size()];
+	    int index = 0;
+		for (QueryVsJobs query : queries) {
+			JobDescription jd = query.getJobDescription();
+			Double similarity = resumeVector.cosineSimilarity(vectors.get(jd));
+			matchingResults[index] = new CosineSimilarityAnalyticsData(query, similarity);
+			index++;
+		}
+		
+		Arrays.sort(matchingResults);
+	    Map<JobTitleIndex, Integer> votes = new HashMap<>();
+		for (int i = 0; i < 500; ++i) {
+			System.out.println(matchingResults[i].queryVsJobs.getQuery() + " - " + matchingResults[i].similarity);
+			if (votes.containsKey(titleMap.get(matchingResults[i].queryVsJobs.getQuery()))) {
+				votes.put(titleMap.get(matchingResults[i].queryVsJobs.getQuery()), votes.get(titleMap.get(matchingResults[i].queryVsJobs.getQuery())) + 1);
+			} else {
+				votes.put(titleMap.get(matchingResults[i].queryVsJobs.getQuery()), 1);
+			}
+		}
+	    
+	    int maxVotes = 0;
+	    JobTitleIndex winningJob = null;
+	    MatchingJobProfileAnalyticsData[] anayticsData = new MatchingJobProfileAnalyticsData[votes.size()];
+	    int i = 0;
+	    for (Entry<JobTitleIndex, Integer> entry : votes.entrySet()) {
+	    	if (entry.getValue() > maxVotes) {
+	    		maxVotes = entry.getValue();
+	    		winningJob = entry.getKey();
+	    	}
+	    	
+	    	anayticsData[i] = new MatchingJobProfileAnalyticsData(entry.getKey(), entry.getValue());
+	    	i++;
+	    }
+	    
+	    Arrays.sort(anayticsData);
+	    List<JobTitleIndex> topMatchingJobs = new ArrayList<>();
+	    JobDescriptionVector jdVector = new JobDescriptionVector(invertedListJobs.getWordList().size());
+	    
+	    for (i = 0; i < COUNT_MATCHING_JOBS; ++i) {
+	    	topMatchingJobs.add(anayticsData[i].title);
+	    	for (JobDescription jd : queryVsJobs.get(anayticsData[i].title.getTitle())) {
+	    		jdVector.addVector(vectors.get(jd));
+	    	}
+	    }
+	    
+	    //jdVector.logicalAndVector(resumeVector);
+	    
+	    jdVector.getImportantWords(invertedListJobs.getWordList());
+	    
+	    return topMatchingJobs;
+	}
+	
+	static class CosineSimilarityAnalyticsData implements Comparable<CosineSimilarityAnalyticsData> {
+		QueryVsJobs queryVsJobs;
+		double similarity;
+		public CosineSimilarityAnalyticsData(QueryVsJobs queryVsJobs, Double similarity) {
+			super();
+			this.queryVsJobs = queryVsJobs;
+			this.similarity = similarity;
+		}
+		@Override
+		public int compareTo(CosineSimilarityAnalyticsData o) {
+			return (o.similarity > this.similarity ? 1 : (o.similarity == this.similarity) ? 0 : -1);
+		}
 	}
 	
 	static class MatchingJobProfileAnalyticsData implements Comparable<MatchingJobProfileAnalyticsData> {

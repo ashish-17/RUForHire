@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class WelcomePageController {
 
-	@RequestMapping(value={"/welcome"}, method = RequestMethod.GET)
+	@RequestMapping(value={"/"}, method = RequestMethod.GET)
 	public ModelAndView welcome() {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("welcome");

@@ -60,7 +60,7 @@ public class FileUploadController {
 				stream.write(bytes);
 				stream.close();
 
-				List<JobTitleIndex> matchingJobProfiles = inMemoryUtils.getMatchingJobProfiles(serverFile);
+				List<JobTitleIndex> matchingJobProfiles = inMemoryUtils.getMatchingJobProfilesUsingCosineSimilarity(serverFile);
 				System.out.println("Matched = " + matchingJobProfiles);
 				
 				serverFile.delete();
