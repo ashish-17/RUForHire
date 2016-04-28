@@ -57,6 +57,7 @@
 
 		});
 
+		$(".loaderImage").hide();
 	});
 	function resizeText() {
 		var preferredWidth = 767;
@@ -70,6 +71,7 @@
 </head>
 <body>
 
+	<div class="loaderImage"></div>
 	<!--Header_section-->
 	<header id="header_outer">
 		<div class="container">
@@ -123,11 +125,13 @@
 												+ "/"
 												+ $("#search-location").val()
 												+ "/" + "0";
+										$('.loaderImage').show();
 										$.ajax({
 											url : req,
 											success : function(result) {
 												console.log(result);
 												handleSearchResults(result);
+												$('.loaderImage').hide();
 											}
 										});
 									});

@@ -5,7 +5,7 @@
 var lastResponse = {};
 function handleSearchResults(jsonObj) {
 	$("#search-result").empty();
-	loadResults(jsonObj);
+	loadResults(jsonObj	);
 }
 
 function loadResults(jsonObj) {
@@ -64,11 +64,14 @@ function loadResults(jsonObj) {
 function loadMore() {
 	var req = "jobsearch/" + $("#search-query").val() + "/"
 			+ $("#search-location").val() + "/" + lastResponse.end;
+	
+	$('.loaderImage').show();
 	$.ajax({
 		url : req,
 		success : function(result) {
 			console.log(result);
 			loadResults(result);
+			$('.loaderImage').hide();
 		}
 	});
 }
