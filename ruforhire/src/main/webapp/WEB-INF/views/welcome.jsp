@@ -78,14 +78,14 @@
 				</div>
 				<nav class="nav" id="nav">
 					<ul class="toggle">
-						<li><a href="#top_content">Home</a></li>
-						<li><a href="#service">Jobs</a></li>
+						<li><a href="<c:url value="/" />">Home</a></li>
+						<li><a href="<c:url value="/jobsearch" />">Jobs</a></li>
 						<li><a href="#work_outer">Upload Resume</a>
 						<li><a href="#work_outer">Contact Us</a>
 					</ul>
 					<ul class="">
-						<li><a href="#top_content">Home</a></li>
-						<li><a href="#service">Jobs</a></li>
+						<li><a href="<c:url value="/" />">Home</a></li>
+						<li><a href="<c:url value="/jobsearch" />">Jobs</a></li>
 						<li><a href="#work_outer">Upload Resume</a></li>
 						<li><a href="#work_outer">Contact Us</a>
 					</ul>
@@ -140,8 +140,8 @@
 							</div>
 							
 							<div class="work_bottom">
-								<span>Ready to take the plunge?</span> <a href="#contact"
-									class="contact_btn"><i class="fa fa-search" aria-hidden="true"></i> Search</a>
+								<span>Ready to take the plunge?</span> 
+								<a href="<c:url value="/jobsearch" />" class="contact_btn"><i class="fa fa-search" aria-hidden="true"></i> Search</a>
 							</div>
 						</div>
 					</div>
