@@ -27,10 +27,7 @@ import com.ruforhire.service.IndeedServiceProvider.SORTBY;
 @Service
 public class JobDescriptionServiceImpl implements JobDescriptionService {
 
-	private static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z"; //Sat, 05 Mar 2016 00:54:36 GMT
-	private static final int COUNT_JOBS_PER_TITLE = 100;
-	private static final int JOBS_FETCHED_PER_QUERY = 25;
-	private SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+	public SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 	
 	private JobDescriptionDao jobDescriptionDao;
 	private IndeedServiceProvider indeedServiceProvider;
@@ -94,7 +91,7 @@ public class JobDescriptionServiceImpl implements JobDescriptionService {
 	}
 
 	@Override
-	public JobSearchServiceResponse searchJobs(String query, String location, SORTBY sortBy,JOB_TYPE jobType, int start) {
+	public JobSearchServiceResponse searchJobs(String query, String location, SORTBY sortBy,JOB_TYPE jobType, int start, int count) {
 		try {
 			IndeedServiceResponse indeedServiceResponse = indeedServiceProvider.getJobs(
 					query, 
@@ -104,7 +101,7 @@ public class JobDescriptionServiceImpl implements JobDescriptionService {
 					SITE_TYPE.EMPLOYER, 
 					jobType, 
 					start, 
-					JOBS_FETCHED_PER_QUERY, 
+					count, 
 					90, 
 					"us");
 
@@ -177,9 +174,9 @@ public class JobDescriptionServiceImpl implements JobDescriptionService {
 					for (int query = 0; query < (COUNT_JOBS_PER_TITLE - countJobsForQuery) / JOBS_FETCHED_PER_QUERY; ++query) {
 						JobSearchServiceResponse response = null;
 						if (jobTitle.getTitle().indexOf("intern") == -1) {
-							response = searchJobs(jobTitle.getTitle(), "us", SORTBY.RELEVANCE, JOB_TYPE.FULL_TIME, query*JOBS_FETCHED_PER_QUERY + (int)countJobsForQuery);
+							response = searchJobs(jobTitle.getTitle(), "us", SORTBY.RELEVANCE, JOB_TYPE.FULL_TIME, query*JOBS_FETCHED_PER_QUERY + (int)countJobsForQuery, JOBS_FETCHED_PER_QUERY);
 						} else {
-							response = searchJobs(jobTitle.getTitle(), "us", SORTBY.RELEVANCE, JOB_TYPE.INTERNSHIP, query*JOBS_FETCHED_PER_QUERY + (int)countJobsForQuery);
+							response = searchJobs(jobTitle.getTitle(), "us", SORTBY.RELEVANCE, JOB_TYPE.INTERNSHIP, query*JOBS_FETCHED_PER_QUERY + (int)countJobsForQuery, JOBS_FETCHED_PER_QUERY);
 						}
 						
 						for (JobDescription job : response.getJobs()) {

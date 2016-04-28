@@ -6,7 +6,10 @@ package com.ruforhire.controller;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +45,10 @@ public class FileUploadController {
 	 * Upload single file using Spring Controller
 	 */
 	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-	public @ResponseBody String uploadFileHandler(@RequestParam("name") String name, @RequestParam("file") MultipartFile file) {
+	public @ResponseBody List<JobTitleIndex> uploadFileHandler(@RequestParam("file") MultipartFile file) {
 
+		Random rn = new Random();
+		String name = "tmp" + rn.nextInt();
 		if (!file.isEmpty()) {
 			try {
 				byte[] bytes = file.getBytes();
@@ -67,12 +72,14 @@ public class FileUploadController {
 				
 				logger.info("Server File Location=" + serverFile.getAbsolutePath());
 
-				return "You successfully uploaded file=" + name;
+				return matchingJobProfiles;
 			} catch (Exception e) {
-				return "You failed to upload " + name + " => " + e.getMessage();
+				logger.info("You failed to upload " + name + " => " + e.getMessage());
 			}
 		} else {
-			return "You failed to upload " + name + " because the file was empty.";
+			logger.info("You failed to upload " + name + " because the file was empty.");
 		}
+		
+		return new ArrayList<JobTitleIndex>();
 	}
 }

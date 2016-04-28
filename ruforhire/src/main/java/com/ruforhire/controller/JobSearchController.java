@@ -34,7 +34,30 @@ public class JobSearchController {
 			@PathVariable String location,
 			@PathVariable int start) {
 		
-		JobSearchServiceResponse response = jobDescriptionService.searchJobs(query, location, SORTBY.DATE, JOB_TYPE.INTERNSHIP, start);
+		JobSearchServiceResponse response = jobDescriptionService.searchJobs(query, location, SORTBY.DATE, JOB_TYPE.INTERNSHIP, start, JobDescriptionService.JOBS_FETCHED_PER_QUERY);
+		return response;
+	}
+
+	@RequestMapping(value={"{query}/{location}/{start}/{count}"}, method = RequestMethod.GET)
+	public @ResponseBody JobSearchServiceResponse searchEnd(
+			@PathVariable String query, 
+			@PathVariable String location,
+			@PathVariable int start, 
+			@PathVariable int count) {
+		
+		JobSearchServiceResponse response = jobDescriptionService.searchJobs(query, location, SORTBY.DATE, JOB_TYPE.INTERNSHIP, start, count);
+		return response;
+	}
+
+	@RequestMapping(value={"{query}/{location}/{jobType}/{start}/{count}"}, method = RequestMethod.GET)
+	public @ResponseBody JobSearchServiceResponse searchJobType(
+			@PathVariable String query, 
+			@PathVariable String location,
+			@PathVariable int jobType,
+			@PathVariable int start, 
+			@PathVariable int count) {
+		
+		JobSearchServiceResponse response = jobDescriptionService.searchJobs(query, location, SORTBY.DATE, (jobType == 0 ? JOB_TYPE.INTERNSHIP : JOB_TYPE.FULL_TIME), start, count);
 		return response;
 	}
 	

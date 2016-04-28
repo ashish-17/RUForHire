@@ -114,17 +114,25 @@
 							  <div class="form-group margin-bottom-sm col-lg-3 col-sm-3 ">
 									<input id="search-location" class="form-control" type="text" placeholder="Location">
 								</div>
-							  <button type="button" id="search-btn" class="btn btn-default search_jobs">Submit</button>
+								<label class="radio-inline"><input type="radio" name="optradio" value="0" id="search-jobtype-intern">Internship</label>
+								<label class="radio-inline"><input type="radio" name="optradio" value="1" id="search-jobtype-fulltime">Full Time</label>
+							  &nbsp;&nbsp;<button type="button" id="search-btn" class="btn btn-default search_jobs">Submit</button>
 							</form>
 						</div>
 						<script>
 							$("#search-btn").click(
 									function() {
+										var jobType;
+										if($('#search-jobtype-intern').is(':checked')) {
+											jobType = "0";
+										} else {
+											jobType = "1";
+										}
 										var req = "jobsearch/"
 												+ $("#search-query").val()
 												+ "/"
 												+ $("#search-location").val()
-												+ "/" + "0";
+												+ "/" + jobType + "/"+ "0" + "/" + "25";
 										$('.loaderImage').show();
 										$.ajax({
 											url : req,
