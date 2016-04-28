@@ -66,6 +66,7 @@ public class InMemoryUtils {
 		queryVsJobs = new HashMap<>();
 	}
 	
+	// Before calling init the database should have the results. which for now i am explicitly loading into database using /prune controller
 	@PostConstruct
 	public void init() {
 		if (queries.size() == 0) {
